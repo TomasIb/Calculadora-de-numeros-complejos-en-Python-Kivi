@@ -37,33 +37,33 @@ class ComplexCalculator():
             return False
 
     def exp(self):
-        self.result = self.term()
-        while self._current in ('+', '-'):
+        self.result = self.term() #PRIMERO REALIZA LAS MULTIPLICACIONES Y DIVISIONES
+        while self._current in ('+', '-'): 
             if self._current == '+':
-                self.next()
-                self.result += self.term()
+                self.next() #BUSCA EL SIGUIENTE
+                self.result += self.term() #OPERA SUMA
             if self._current == '-':
                 self.next()
-                self.result -= self.term()
+                self.result -= self.term() #OPERA RESTA
         return self.result
 
     def factor(self):
         self.result = None
         if np.iscomplex(self._current):
-            self.result = complex(self._current)
+            self.result = complex(self._current) #OBTIENE EL NUMERO
+            self.next() #OBTIENE EL SIGUIENTE
+        elif self._current is '(' or  self._current is '[': #SI EL SIGUIENTE ES UN PARENTESIS ABRE, BUSCA AL SIGUIETNE Y OPERA
             self.next()
-        elif self._current is '(' or  self._current is '[':
-            self.next()
-            self.result = self.exp()
+            self.result = self.exp() # PRIMERO BUSCA SI ES MULTIPLICAION Y DIVISION Y LUEGO BUSCA  SUMA Y RESTA
             self.next()
         return self.result
 
     def term(self):
-        self.result = self.factor()
+        self.result = self.factor() #PRIMERO VERIFICA LOS PARENTESIS
         while self._current in ('*', '/'):
             if self._current == '*':
                 self.next()
-                self.result *= self.term()
+                self.result *= self.term() 
             if self._current == '/':
                 self.next()
                 self.result /= self.term()
@@ -79,7 +79,8 @@ class ComplexCalculator():
         for i in range(len(argument)):
 
             if(argument[i] is ','):
-                if any(ele in argument[i-1] for ele in point):
+
+                if any(ele in argument[i-1] for ele in point): #VERIFICA QUE DESPUES DE UN PUNTO VENGA UN DIGITO
                     for a in argument[i-1]:
                         last = a
                     if last.isdigit():
@@ -88,8 +89,7 @@ class ComplexCalculator():
                         return False
                     
                  
-    
-                elif any(ele in argument[i+1] for ele in point):
+                elif any(ele in argument[i+1] for ele in point): #VERIFICA QUE DESPUES DE UN PUNTO VENGA UN DIGITO
                     for a in argument[i+1]:
                        last = a
                     if last.isdigit():
@@ -99,46 +99,46 @@ class ComplexCalculator():
                     
                     
 
-                if(any(ele in argument[i-1] for ele in point_negative) and i > 0):
-                    real = float(argument[i-1])
+                if(any(ele in argument[i-1] for ele in point_negative) and i > 0): #SI EL ANTERIOR DECIMAL NEGATIVO
+                    real = float(argument[i-1]) #CASTEA Y ASIGNA LA PARTE REAL
                     try_character_index = i-2; 
                     if(try_character_index > 0):
-                        if(argument[try_character_index] not in self.caracters and try_character_index > 0 and try_character_index < len(argument)):
+                        if(argument[try_character_index] not in self.caracters and try_character_index > 0 and try_character_index < len(argument)): #SI EL ANTERIOR AL ANTERIOR NO ES UN CARACTER ERROR
                             print("error 1")
                             return False
 
-                elif(argument[i-1].isdigit() or(any(ele in argument[i-1] for ele in negative))and i > 0 ):
-                    real = int(argument[i-1])
+                elif(argument[i-1].isdigit() or(any(ele in argument[i-1] for ele in negative))and i > 0 ): #SI EL ANTERIOR ES UN ENTERO NEGATIVO O POSITIVO
+                    real = int(argument[i-1]) #CASTEA Y ASIGNA LA PARTE REAL
                     try_character_index = i-2; 
                     if(try_character_index > 0):
-                        if(argument[try_character_index] not in self.caracters and try_character_index > 0 and try_character_index < len(argument)):
+                        if(argument[try_character_index] not in self.caracters and try_character_index > 0 and try_character_index < len(argument)):  #SI EL ANTERIOR AL ANTERIOR NO ES UN CARACTER ERROR
                             print("error 2")
                             return False
 
-                if(any(ele in argument[i+1] for ele in point_negative)  and  i < len(argument)):
-                    imaginary = float(argument[i+1])
+                if(any(ele in argument[i+1] for ele in point_negative)  and  i < len(argument)): #SI EL CONSECUENTE ES DECIMAL NEGATIVO O POSITIVO
+                    imaginary = float(argument[i+1])#CASTEA Y ASIGNA LA PARTE IMAGINARIA
                     try_character_index = i+2; 
                     if(try_character_index < len(argument)):
-                        if(argument[try_character_index] not in self.caracters and try_character_index > 0 and try_character_index < len(argument)):
+                        if(argument[try_character_index] not in self.caracters and try_character_index > 0 and try_character_index < len(argument)):#SI EL CONSECUENTE A EL CONSECUENTE NO ES UN CARACTER ERROR
                             print("error 3")
                             return False
 
-                elif(argument[i+1].isdigit() or((any(ele in argument[i+1] for ele in negative)) )and i < len(argument)):
-                    imaginary = int(argument[i+1])
+                elif(argument[i+1].isdigit() or((any(ele in argument[i+1] for ele in negative)) )and i < len(argument)): #SI EL CONSECUENTE ES UN ENTERO POSITIVO O NEGATIVO
+                    imaginary = int(argument[i+1]) #CASTEA Y ASIGNA LA PARTE IMAGINARIA
                     try_character_index = i+2; 
                     if(try_character_index < len(argument)):
-                        if(argument[try_character_index] not in self.caracters and try_character_index > 0 and try_character_index < len(argument)):
+                        if(argument[try_character_index] not in self.caracters and try_character_index > 0 and try_character_index < len(argument)): #SI EL CONSECUENTE A EL CONSECUENTE NO ES UN CARACTER ERROR
                             print("error 4")
                             return False
                 
         
-                self.ready_expression.append(complex(real,imaginary))
+                self.ready_expression.append(complex(real,imaginary)) #CREA EL NUMERO COMPLEJO Y LO APILA
 
-            elif(argument[i] in self.caracters):
+            elif(argument[i] in self.caracters): #SI ES UN CARACTER LO APILA
                 self.ready_expression.append(argument[i])
         
-        self._tokens = self.ready_expression
-        return True
+        self._tokens = self.ready_expression #SE ACTUALIZA EL ARREGLO PRINCIPAL
+        return True 
 
 
     def separate_chain(self):
@@ -161,7 +161,7 @@ class ComplexCalculator():
         
         negative = ['-']
         
-        for i in range(len(self._tokens)): #INSERTA UN + SI ES QUE HAY UN NEGATIVO ANTES , EL NEGATIVO SOLO ES
+        for i in range(len(self._tokens)): #INSERTA UN + SI ES QUE HAY UN NEGATIVO ANTES , Y HACE - EL NUMERO SIGUIENTE Y REALIZA UNA SUMA EN CASO DE QUE EXISTA UN +- 
             
             if(any(ele in self._tokens[i] for ele in negative)):
                 index_inf = i-1
@@ -171,14 +171,11 @@ class ComplexCalculator():
                         continue
                    
                     if(self._tokens[index_sup] is '+'):
-                        self._tokens = self._tokens[:i] + self._tokens[index_sup:]
-                        self._tokens[index_sup] = '-'+self._tokens[index_sup]
-                        break
+                        self._tokens = self._tokens[:i] + self._tokens[index_sup:] #OBTIENE TODOS LOS CARACTERES MENOS EL SIGNO -
+                        self._tokens[index_sup] = '-'+self._tokens[index_sup] #LO AGREGA AL NUMERO SIGUIENTE
+                        break #TERMINA
                     else:
-                        self._tokens.insert(i,'+') 
-
-            
-        
+                        self._tokens.insert(i,'+') # SI NO INSERTA UN +
         return True
       
    
