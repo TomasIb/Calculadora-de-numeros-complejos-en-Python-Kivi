@@ -24,12 +24,19 @@ class ComplexCalculator():
         if(self._expression != None): 
             open_parentheses=[] #ARREGLO DE PARENTESIS ABRE
             closed_parentheses=[] #ARREGLO DE PARENTESIS CIERRA
+            open_brackets=[]
+            closed_brackets=[]
             for char in self._expression: # VERIFICA SI ESTÁ BALANCEADO
-                if(char == '[' or char == '('): # SI SE ENCUENTRA UN PARENTESIS ABRE SE GUARDA EN EL ARREGLO
+                if(char == '('): # SI SE ENCUENTRA UN PARENTESIS ABRE SE GUARDA EN EL ARREGLO
                     open_parentheses.append(char)
-                elif(char == ']' or char == ')'): # SI SE ENCUENTRA UN PARENTESIS CIERRA SE GUARDA EN EL ARREGLO
+                elif(char == ')'): # SI SE ENCUENTRA UN PARENTESIS CIERRA SE GUARDA EN EL ARREGLO
                     closed_parentheses.append(char)
-            if(len(open_parentheses) == len(closed_parentheses)): #SI LOS TAMAÑOS SON IGUALES ESTAN BALANCEADOS
+                elif (char == '['):
+                    open_brackets.append(char)
+                elif (char == ']'):
+                    closed_brackets.append(char)
+
+            if(len(open_parentheses) == len(closed_parentheses) and (len(open_brackets) == len(closed_brackets))): #SI LOS TAMAÑOS SON IGUALES ESTAN BALANCEADOS
                 return True
             else:
                 return False
@@ -88,7 +95,7 @@ class ComplexCalculator():
                     if(last.isdigit()):
                         print(last)
                     else:
-                        
+                        return False
 
                    
                     
@@ -100,7 +107,7 @@ class ComplexCalculator():
                     if(last.isdigit()):
                         print(last)
                     else:
-                        
+                        return False
                   
                     
                     
