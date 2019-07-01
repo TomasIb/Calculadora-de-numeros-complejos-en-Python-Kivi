@@ -81,21 +81,27 @@ class ComplexCalculator():
             if(argument[i] is ','):
 
                 if any(ele in argument[i-1] for ele in point): #VERIFICA QUE DESPUES DE UN PUNTO VENGA UN DIGITO
+                    last = None
                     for a in argument[i-1]:
                         last = a
-                    if last.isdigit():
-                        continue
+                    
+                    if(last.isdigit()):
+                        print(last)
                     else:
-                        return False
+                        
+
+                   
                     
                  
-                elif any(ele in argument[i+1] for ele in point): #VERIFICA QUE DESPUES DE UN PUNTO VENGA UN DIGITO
+                if any(ele in argument[i+1] for ele in point): #VERIFICA QUE DESPUES DE UN PUNTO VENGA UN DIGITO
+                    last = None
                     for a in argument[i+1]:
-                       last = a
-                    if last.isdigit():
-                        continue
+                        last = a
+                    if(last.isdigit()):
+                        print(last)
                     else:
-                        return False
+                        
+                  
                     
                     
 
@@ -208,6 +214,8 @@ class ComplexCalculator():
             return False,False
 
             
+        
+
 if __name__ == "__main__":
     calculator = ComplexCalculator()
 #input 2,2+3,4*[2,9/3,9+[3,4/(2,2)]]
