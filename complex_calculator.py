@@ -208,9 +208,6 @@ class ComplexCalculator():
             return False,False
 
             
-        
-
-
 if __name__ == "__main__":
     calculator = ComplexCalculator()
 #input 2,2+3,4*[2,9/3,9+[3,4/(2,2)]]
