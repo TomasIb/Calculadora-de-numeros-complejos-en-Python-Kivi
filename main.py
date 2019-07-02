@@ -80,7 +80,7 @@ class CalculatorApp(App):
         calculator = ComplexCalculator()
        
         result,initial_expression = calculator.calculate(text)
-
+        
         if(result == False):
            self.error_dialog()
         else:

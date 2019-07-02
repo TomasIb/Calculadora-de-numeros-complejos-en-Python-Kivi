@@ -7,6 +7,7 @@ class ComplexCalculator():
         self.caracters = ['+','-','*','/','(',')','[',']'] #CARACTERES ACEPTADOS
         self.ready_expression = [] #EXPRESION SETEADA PARA SER OPERADA
         self.result = None #RESULTADO
+        self.numbers = ['0','1','2','3','4','5','6','7','8','9']
         
     def set_expression(self,parameter):
         if(parameter != ''):  #SI CARACTERES INGRESADOS SON VACIOS
@@ -42,6 +43,17 @@ class ComplexCalculator():
                 return False
         else:
             return False
+
+    def nobelongchar(self):
+        point=['.']
+        comma=[',']
+        for a in self._tokens:
+            if ((any(ele in a for ele in self.caracters)) or (any(ele in a for ele in self.numbers)) or (any(ele in a for ele in point)) or (any(ele in a for ele in comma)) ):
+                continue
+            else:
+                return False
+        return True
+
 
     def exp(self):
         self.result = self.term() #PRIMERO REALIZA LAS MULTIPLICACIONES Y DIVISIONES
@@ -173,12 +185,14 @@ class ComplexCalculator():
 
         
         negative = ['-']
+        positive = ['+']
         
         for i in range(len(self._tokens)): #INSERTA UN + SI ES QUE HAY UN NEGATIVO ANTES , Y HACE - EL NUMERO SIGUIENTE Y REALIZA UNA SUMA EN CASO DE QUE EXISTA UN +- 
             
+            index_inf = i-1
+            index_sup = i+1
             if(any(ele in self._tokens[i] for ele in negative)):
-                index_inf = i-1
-                index_sup = i+1
+            
                 if(index_inf > 0 and index_sup < len(self._tokens)):
                     if(self._tokens[index_inf] in self.caracters or self._tokens[index_inf] is ',' ):
                         continue
@@ -187,11 +201,58 @@ class ComplexCalculator():
                         self._tokens = self._tokens[:i] + self._tokens[index_sup:] #OBTIENE TODOS LOS CARACTERES MENOS EL SIGNO -
                         self._tokens[index_sup] = '-'+self._tokens[index_sup] #LO AGREGA AL NUMERO SIGUIENTE
                         break #TERMINA
+                    elif(self._tokens[index_sup] is '(' or self._tokens[index_sup] is '['):
+                         continue
                     else:
                         self._tokens.insert(i,'+') # SI NO INSERTA UN +
+
+            if(any(ele in self._tokens[i] for ele in positive)):
+                if(index_inf > 0 and index_sup < len(self._tokens)):
+                    if (self._tokens[index_sup] in self.caracters or self._tokens[index_sup].isdigit() or self.isnegative(self._tokens[index_sup]) or self.isdecimal(self._tokens[index_sup]) ):
+                        continue
+                    else:
+                        return False
+               
+
+                if((self._tokens[index_inf] is '('  and (self._tokens[index_sup].isdigit() or self.isdecimal(self._tokens[index_sup])) and index_inf >= 0 and index_sup <len(self._tokens))):
+                    print (self._tokens[:i] + self._tokens[index_sup:] )
+                    self._tokens = self._tokens[:i] + self._tokens[index_sup:]
+                    break
+
+                if(index_inf < 0 and (self._tokens[index_sup].isdigit() or self.isdecimal(self._tokens[index_sup]))): #si es el inicial
+                    self._tokens = self._tokens[i+1:]
+                    break
+
+                  
+        print("CADENA:",self._tokens)
         return True
-      
-   
+
+  
+
+    def isnegative(self,value):
+        negative = ['-']
+        if(any(ele in value for ele in negative)):
+            if value[1].isdigit():
+              return True
+            else:
+                return False
+
+    def isdecimal(self,value):
+        point=['.']
+    
+        if any(ele in value for ele in point):
+            for i in range(len(value)):
+                if value[i] is '.':
+                    print(value)
+                    if value[i-1].isdigit() and value[i+1].isdigit(): 
+                        return True
+                    else: 
+                        return False
+                
+        else:
+            return False
+
+
     def set_current(self):
         self._current = self._tokens[0] #SETEA EL PRIMER ELEMENTO
         
@@ -202,21 +263,27 @@ class ComplexCalculator():
 
     def calculate(self,parameter):
         try:
+    
             if(self.set_expression(parameter)): #SI SE PUEDE SETEAR LA EXPRESION INGRESADA
                 if(self.is_balanced_parentheses()): #Y LOS PARENTESIS ESTAN BALANCEADOS
-                    self.create_complex() #CREA NUMEROS COMPLEJOS
-                    self.set_current() #SETEA EL CARACTER QUE SE ESTÁ LEYENDO EN LA OPERACION
-                    self.result = self.exp() #OPERA LA CADENA
-                    print ("result:",self.result)
-                    if(self.result != None): #SI EXISTE RESULTADO
-                        return self.result,self.ready_expression
+                    if(self.nobelongchar()):
+                    
+                        self.create_complex() #CREA NUMEROS COMPLEJOS
+                        self.set_current() #SETEA EL CARACTER QUE SE ESTÁ LEYENDO EN LA OPERACION
+                        self.result = str(self.exp()) #OPERA LA CADENA
+                        print ("result:",self.result)
+                    
+                        if(self.result == None):
+                            return False,False
+                        else:
+                            return self.result,self.ready_expression
+                        
                     else:
                         return False,False
                 else:
                     return False,False
             else:
                 return False,False
-            
         except:
             return False,False
 
