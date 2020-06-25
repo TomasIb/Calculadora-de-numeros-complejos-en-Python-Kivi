@@ -1,4 +1,4 @@
-# ComplexNumberCalculatorPythonKivy
+# Caculadora de números complejos en Python Kivi
 
 Instalar 
 
